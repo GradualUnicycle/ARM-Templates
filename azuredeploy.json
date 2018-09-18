@@ -44,8 +44,8 @@
             }
         },
         {
-            "apiVersion": "2015-06-15",
-            "type": "Microsoft.Network/publicIPAddresses",
+           "type": "Microsoft.Network/publicIPAddresses",
+           "apiVersion": "2018-07-01",
             "name": "[variables('publicIPAddressName')]",
             "location": "[resourceGroup().location]",
             "properties": {
