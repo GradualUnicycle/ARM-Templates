@@ -2,15 +2,56 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "testparam": {
-            "type": "string"
-        }    
+        "adminUsername": {
+            "type": "string",
+            "metadata": {
+              "description": "User name for the Virtual Machine."
+            }
+          },
+          "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+              "description": "Password for the Virtual Machine."
+            }
+          }  
     },
     "variables": {
-        
+        "addressPrefix": "10.0.0.0/16",
+        "subnetName": "Subnet",
+        "subnetPrefix": "10.0.0.0/24",
+        "publicIPAddressName": "myPublicIP",
+        "publicIPAddressType": "Dynamic"
     },
     "resources": [
-        
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2018-07-01",
+            "location": "[resourceGroup().location]",
+            "properties":{
+                "addressSpace":{
+                    "addressPrefixes":[
+                        "[variables('addressPrefix')]"
+                    ]
+                },
+                "subnets":[
+                    {
+                        "name": "[variables('subnetname')]",
+                        "properties":{
+                            "addressPrefix": "[variables('subnetPrefix')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[variables('publicIPAddressName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+              "publicIPAllocationMethod": "[variables('publicIPAddressType')]"
+            }
+          }
     ],
     "outputs": {
         
