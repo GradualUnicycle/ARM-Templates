@@ -7,6 +7,7 @@
         }         
     },
     "variables": {
+        "vnetName": "vnet",
         "addressPrefix": "10.0.0.0/16",
         "subnetName": "Subnet",
         "subnetPrefix": "10.0.1.0/24",
@@ -16,6 +17,7 @@
     "resources": [
         {
             "type": "Microsoft.Network/virtualNetworks",
+            "name": "[variables('vnetName')]",
             "apiVersion": "2018-07-01",
             "location": "[resourceGroup().location]",
             "properties":{
