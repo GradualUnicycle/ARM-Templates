@@ -17,6 +17,19 @@
                 "description": "the size of the VM e.g 'Standard_B1ms' or 'Standard_D8s_v3'"
             }
         },
+        "windowsOSVersion": {
+            "type": "string",
+            "defaultValue": "2016-Datacenter",
+            "allowedValues": [
+                "2008-R2-SP1",
+                "2012-Datacenter",
+                "2012-R2-Datacenter",
+                "2016-Datacenter"
+            ],
+            "metadata": {
+                "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version. Allowed values: 2008-R2-SP1, 2012-Datacenter, 2012-R2-Datacenter & 2016-Datacenter."
+            }
+        },
         "osDiskType": {
             "type": "string",
             "defaultValue": "Premium_LRS",
@@ -30,14 +43,17 @@
         },
         "adminUsername": {
             "type": "string",
-            "defaultValue": "Unicycle",
-            "minLength": 5
+            "defaultValue": "unicycle",
+            "metadata": {
+                "description": "Admin username on all VMs."
+            }
         },
         "adminPassword": {
             "type": "securestring",
-            "minLength": 12
+            "metadata": {
+                "description": "Admin password on all VMs."
+            }
         }
-
     },
     "variables": {
         "vnetName": "vnet",
@@ -127,7 +143,7 @@
                     "imageReference": {
                         "publisher": "MicrosoftWindowsServer",
                         "offer": "WindowsServer",
-                        "sku": "2016-Datacenter",
+                        "sku": "[parameters('windowsOSVersion')]",
                         "version": "latest"
                     }
                 },
