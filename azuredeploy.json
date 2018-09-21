@@ -2,9 +2,42 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "nicName": {
-            "type": "string"   
-        }         
+        "virtualMachineName": {
+            "type": "string",
+            "defaultValue": "testVm",
+            "minLength": 3,
+            "metadata": {
+                "description": "the name of the VirtualMachine(s)"
+            }
+        },
+        "virtualMachineSize": {
+            "type": "string",
+            "defaultValue": "Standard_B1ms",
+            "metadata": {
+                "description": "the size of the VM e.g 'Standard_B1ms' or 'Standard_D8s_v3'"
+            }
+        },
+        "osDiskType": {
+            "type": "string",
+            "defaultValue": "Premium_LRS",
+            "allowedValues": [
+                "Premium_LRS",
+                "Standard_LRS"
+            ],
+            "metadata": {
+                "description": "What kind of OS disk do you want to use?"
+            }
+        },
+        "adminUsername": {
+            "type": "string",
+            "defaultValue": "Unicycle",
+            "minLength": 5
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "minLength": 12
+        }
+
     },
     "variables": {
         "vnetName": "vnet",
@@ -13,7 +46,7 @@
         "subnetPrefix": "10.0.1.0/24",
         "publicIPAddressName": "myPublicIP",
         "publicIPAddressType": "Dynamic",
-        "nicName": "vmNic"
+        "networkInterfaceName": "vmNic"
     },
     "resources": [
         {
@@ -21,16 +54,16 @@
             "name": "[variables('vnetName')]",
             "apiVersion": "2018-07-01",
             "location": "[resourceGroup().location]",
-            "properties":{
-                "addressSpace":{
-                    "addressPrefixes":[
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
                         "[variables('addressPrefix')]"
                     ]
                 },
-                "subnets":[
+                "subnets": [
                     {
                         "name": "[variables('subnetname')]",
-                        "properties":{
+                        "properties": {
                             "addressPrefix": "[variables('subnetPrefix')]"
                         }
                     }
@@ -38,42 +71,85 @@
             }
         },
         {
-           "type": "Microsoft.Network/publicIPAddresses",
-           "apiVersion": "2018-07-01",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2018-07-01",
             "name": "[variables('publicIPAddressName')]",
             "location": "[resourceGroup().location]",
             "properties": {
-              "publicIPAllocationMethod": "[variables('publicIPAddressType')]"
+                "publicIPAllocationMethod": "[variables('publicIPAddressType')]"
             }
         },
         {
             "apiVersion": "2015-06-15",
             "type": "Microsoft.Network/networkInterfaces",
-            "name": "[variables('nicName')]",
+            "name": "[variables('networkInterfaceName')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-              "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
-              "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
+                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
             ],
             "properties": {
-              "ipConfigurations": [
-                {
-                  "name": "[parameters('nicName')]",
-                  "properties": {
-                    "privateIPAllocationMethod": "Dynamic",
-                    "publicIPAddress": {
-                      "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]"
-                    },
-                    "subnet": {
-                      "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'),variables('subnetName'))]"
+                "ipConfigurations": [
+                    {
+                        "name": "[variables('networkInterfaceName')]",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'),variables('subnetName'))]"
+                            }
+                        }
                     }
-                  }
-                }
-              ]
+                ]
             }
-          }
+        },
+        {
+            "name": "[parameters('virtualMachineName')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2018-06-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "createOption": "FromImage",
+                        "managedDisk": {
+                            "storageAccountType": "[parameters('osDiskType')]"
+                        }
+                    },
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2016-Datacenter",
+                        "version": "latest"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachineName')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "windowsConfiguration": {
+                        "enableAutomaticUpdates": true,
+                        "provisionVmAgent": true
+                    }
+                }
+            },
+            "tags": {}
+        }
     ],
-    "outputs": {
-        
-    }
+    "outputs": {}
 }
