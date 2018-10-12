@@ -140,6 +140,18 @@
                             "storageAccountType": "[parameters('osDiskType')]"
                         }
                     },
+                    "dataDisks": [
+                        {
+                            "lun": 0,
+                            "name": "NTDS",
+                            "createOption": "Attach",
+                            "caching": "None",
+                            "managedDisk": {
+                                "storageAccountType": "Premium_LRS"                                
+                            },
+                            "diskSizeGB": 20
+                        }
+                    ],
                     "imageReference": {
                         "publisher": "MicrosoftWindowsServer",
                         "offer": "WindowsServer",
