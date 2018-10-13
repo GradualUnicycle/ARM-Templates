@@ -145,10 +145,7 @@
                         {
                             "lun": 0,
                             "name": "[variables('DataDiskName')]",
-                            "createOption": "Attach",
-                            "managedDisk": {
-                                "storageAccountType": "Premium_LRS"                                
-                            },
+                            "createOption": "Attach",                            
                             "diskSizeGB": 120
                         }
                     ],
