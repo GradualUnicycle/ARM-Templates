@@ -62,7 +62,8 @@
         "subnetPrefix": "10.0.1.0/24",
         "publicIPAddressName": "myPublicIP",
         "publicIPAddressType": "Dynamic",
-        "networkInterfaceName": "vmNic"
+        "networkInterfaceName": "vmNic",
+        "DataDiskName": "NTDS"
     },
     "resources": [
         {
@@ -143,13 +144,12 @@
                     "dataDisks": [
                         {
                             "lun": 0,
-                            "name": "NTDS",
+                            "name": "[variables('DataDiskName')]",
                             "createOption": "Attach",
-                            "caching": "None",
                             "managedDisk": {
                                 "storageAccountType": "Premium_LRS"                                
                             },
-                            "diskSizeGB": 20
+                            "diskSizeGB": 120
                         }
                     ],
                     "imageReference": {
