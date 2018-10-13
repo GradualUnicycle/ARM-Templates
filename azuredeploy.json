@@ -128,8 +128,7 @@
             "apiVersion": "2018-06-01",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'))]",
-                "[resourceId('Microsoft.Compute/disks/', concat(parameters('virtualMachineName'),'-datadisk1'))]"
+                "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'))]"
             ],
             "properties": {
                 "hardwareProfile": {
@@ -146,10 +145,11 @@
                         {
                             "lun": 0,
                             "name": "[concat(parameters('virtualMachineName'),'-datadisk1')]",
-                            "createOption": "Attach",
+                            "createOption": "Empty",
                             "managedDisk": {
-                                "id": "[resourceId('Microsoft.Compute/disks/', concat(parameters('virtualMachineName'),'-datadisk1'))]"
-                            }
+                                "storageAccountType": "Premium_LRS"
+                            },
+                            "diskSizeGB": 120
                         }
                     ],
                     "imageReference": {
@@ -177,21 +177,6 @@
                 }
             },
             "tags": {}
-        },
-        {
-            "type": "Microsoft.Compute/disks",
-            "name": "[concat(parameters('virtualMachineName'),'-datadisk1')]",
-            "apiVersion": "2017-03-30",
-            "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "Standard_LRS"
-            },
-            "properties": {
-                "creationData": {
-                    "createOption": "Empty"
-                },
-                "diskSizeGB": 1023
-            }
         }
     ],
     "outputs": {}
