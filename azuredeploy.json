@@ -144,9 +144,11 @@
                     "dataDisks": [
                         {
                             "lun": 0,
-                            "name": "[variables('DataDiskName')]",
-                            "createOption": "Attach",                            
-                            "diskSizeGB": 120
+                            "name": "[concat(parameters('virtualMachineName'),'-datadisk1')]",
+                            "createOption": "Attach",
+                            "managedDisk": {
+                                "id": "[resourceId('Microsoft.Compute/disks/', concat(parameters('virtualMachineName'),'-datadisk1'))]"
+                            }
                         }
                     ],
                     "imageReference": {
@@ -174,6 +176,21 @@
                 }
             },
             "tags": {}
+        },
+        {
+            "type": "Microsoft.Compute/disks",
+            "name": "[concat(parameters('virtualMachineName'),'-datadisk1')]",
+            "apiVersion": "2017-03-30",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard_LRS"
+            },
+            "properties": {
+                "creationData": {
+                    "createOption": "Empty"
+                },
+                "diskSizeGB": 1023
+            }
         }
     ],
     "outputs": {}
