@@ -43,7 +43,6 @@
         },
         "adminUsername": {
             "type": "string",
-            "defaultValue": "unicycle",
             "metadata": {
                 "description": "Admin username on all VMs."
             }
@@ -67,7 +66,13 @@
             "metadata": {
               "description": "DSC configuration function to call"
             }
-          }
+          },
+      "domainName": {
+        "type": "string",
+        "metadata": {
+            "description": "The FQDN of the AD Domain created "
+            }
+        },
     },
     "variables": {
         "vnetName": "vnet",
@@ -77,8 +82,7 @@
         "publicIPAddressName": "myPublicIP",
         "publicIPAddressType": "Dynamic",
         "networkInterfaceName": "vmNic",
-        "vmExtensionName": "DCExtension",
-        "DomainName": "Contoso.com"
+        "vmExtensionName": "DCExtension"
     },
     "resources": [
         {
