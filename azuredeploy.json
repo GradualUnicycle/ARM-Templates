@@ -212,7 +212,7 @@
                     "function": "DC"
                 },                
                 "configurationArguments": {
-                  "nodeName": "[parameters('virtualMachineName')]"
+                  "MachineName": "[parameters('virtualMachineName')]"
                 }
               },
               "protectedSettings": {}
