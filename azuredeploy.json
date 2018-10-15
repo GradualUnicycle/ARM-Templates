@@ -59,14 +59,7 @@
             "metadata": {
                 "description": "URL for the DSC configuration module. NOTE: Can be a Github url(raw) to the zip file"
             }
-        },
-        "configurationFunction": {
-            "type": "string",
-            "defaultValue": "DC.ps1\\DC",
-            "metadata": {
-                "description": "DSC configuration function to call"
-            }
-        },
+        },        
         "domainName": {
             "type": "string",
             "metadata": {
