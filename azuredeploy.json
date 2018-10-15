@@ -57,22 +57,22 @@
             "type": "string",
             "defaultValue": "https://raw.githubusercontent.com/GradualUnicycle/ARM-Templates/master/dc.zip",
             "metadata": {
-              "description": "URL for the DSC configuration module. NOTE: Can be a Github url(raw) to the zip file"
+                "description": "URL for the DSC configuration module. NOTE: Can be a Github url(raw) to the zip file"
             }
-          },
+        },
         "configurationFunction": {
             "type": "string",
             "defaultValue": "DC.ps1\\DC",
             "metadata": {
-              "description": "DSC configuration function to call"
-            }
-          },
-      "domainName": {
-        "type": "string",
-        "metadata": {
-            "description": "The FQDN of the AD Domain created "
+                "description": "DSC configuration function to call"
             }
         },
+        "domainName": {
+            "type": "string",
+            "metadata": {
+                "description": "The FQDN of the AD Domain created "
+            }
+        }
     },
     "variables": {
         "vnetName": "vnet",
@@ -203,34 +203,34 @@
             "apiVersion": "2016-03-30",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-              "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
+                "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
             ],
             "properties": {
-              "publisher": "Microsoft.Powershell",
-              "type": "DSC",
-              "typeHandlerVersion": "2.9",
-              "autoUpgradeMinorVersion": true,
-              "settings": {
-                "configuration": {
-                    "url": "[parameters('modulesUrl')]",
-                    "script": "DC.ps1",
-                    "function": "DC"
-                },                
-                "configurationArguments": {
-                  "MachineName": "[parameters('virtualMachineName')]",
-                  "DomainName": "[variables('DomainName')]"  
-                }
-              },
-              "protectedSettings": {
-                "configurationArguments": {
-                    "adminCreds": {
-                        "userName": "[parameters('adminUserName')]",
-                        "password": "[parameters('adminPassword')]"
+                "publisher": "Microsoft.Powershell",
+                "type": "DSC",
+                "typeHandlerVersion": "2.9",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "configuration": {
+                        "url": "[parameters('modulesUrl')]",
+                        "script": "DC.ps1",
+                        "function": "DC"
+                    },
+                    "configurationArguments": {
+                        "MachineName": "[parameters('virtualMachineName')]",
+                        "DomainName": "[parameters('DomainName')]"
+                    }
+                },
+                "protectedSettings": {
+                    "configurationArguments": {
+                        "adminCreds": {
+                            "userName": "[parameters('adminUserName')]",
+                            "password": "[parameters('adminPassword')]"
+                        }
                     }
                 }
-              }
             }
-          }
+        }
     ],
     "outputs": {}
 }
