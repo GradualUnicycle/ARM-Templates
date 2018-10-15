@@ -77,7 +77,8 @@
         "publicIPAddressName": "myPublicIP",
         "publicIPAddressType": "Dynamic",
         "networkInterfaceName": "vmNic",
-        "vmExtensionName": "DCExtension"
+        "vmExtensionName": "DCExtension",
+        "DomainName": "Contoso.com"
     },
     "resources": [
         {
@@ -212,10 +213,18 @@
                     "function": "DC"
                 },                
                 "configurationArguments": {
-                  "MachineName": "[parameters('virtualMachineName')]"
+                  "MachineName": "[parameters('virtualMachineName')]",
+                  "DomainName": "[variables('DomainName')]"  
                 }
               },
-              "protectedSettings": {}
+              "protectedSettings": {
+                "configurationArguments": {
+                    "adminCreds": {
+                        "userName": "[parameters('adminUserName')]",
+                        "password": "[parameters('adminPassword')]"
+                    }
+                }
+              }
             }
           }
     ],
