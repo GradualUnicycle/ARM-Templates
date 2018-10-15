@@ -206,8 +206,11 @@
               "typeHandlerVersion": "2.19",
               "autoUpgradeMinorVersion": true,
               "settings": {
-                "ModulesUrl": "[parameters('modulesUrl')]",
-                "ConfigurationFunction": "[parameters('configurationFunction')]",
+                "configuration": {
+                    "url": "[parameters('modulesUrl')]",
+                    "script": "dc.ps1",
+                    "function": "dc"
+                },                
                 "Properties": {
                   "MachineName": "[parameters('virtualMachineName')]"
                 }
